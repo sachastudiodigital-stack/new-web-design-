@@ -1,10 +1,34 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Eyebrow from "@/components/Eyebrow";
 import { WHATSAPP_URL } from "@/lib/contact";
 import heroVideo from "@/assets/hero-kinetic.mp4";
 import heroVideoWebm from "@/assets/hero-kinetic.webm";
 import heroPoster from "@/assets/hero-kinetic-poster.jpg";
+import heroVerticalVideo from "@/assets/hero-kinetic-vertical.mp4";
+import heroVerticalVideoWebm from "@/assets/hero-kinetic-vertical.webm";
+import heroVerticalPoster from "@/assets/hero-kinetic-vertical-poster.jpg";
+
+const PHONE_QUERY = "(max-width: 639px)";
+
+const videos = {
+  wide: { mp4: heroVideo, webm: heroVideoWebm, poster: heroPoster },
+  vertical: { mp4: heroVerticalVideo, webm: heroVerticalVideoWebm, poster: heroVerticalPoster },
+};
+
+// Phones get the 9:16 cut, larger screens the 16:9 one. Only the chosen file is loaded.
+function useVideoFormat() {
+  const [format, setFormat] = useState<keyof typeof videos>(() =>
+    window.matchMedia(PHONE_QUERY).matches ? "vertical" : "wide"
+  );
+  useEffect(() => {
+    const query = window.matchMedia(PHONE_QUERY);
+    const update = () => setFormat(query.matches ? "vertical" : "wide");
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return format;
+}
 
 const fadeUp = (delay: number) => ({
   className: "opacity-0 animate-fade-up",
@@ -13,6 +37,8 @@ const fadeUp = (delay: number) => ({
 
 export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const format = useVideoFormat();
+  const video = videos[format];
 
   // Respect reduced motion: show the poster frame instead of autoplaying.
   useEffect(() => {
@@ -26,7 +52,7 @@ export default function HeroSection() {
     apply();
     query.addEventListener("change", apply);
     return () => query.removeEventListener("change", apply);
-  }, []);
+  }, [format]);
 
   return (
     <section id="top" className="dot-grid relative flex min-h-[100svh] items-center overflow-hidden pt-24">
@@ -78,11 +104,16 @@ export default function HeroSection() {
         </div>
 
         <div className={fadeUp(0.5).className} style={fadeUp(0.5).style}>
-          <div className="overflow-hidden rounded-md border bg-background shadow-[0_30px_80px_-30px_hsl(var(--primary)/0.35)]">
+          <div
+            className={`overflow-hidden rounded-md border bg-background shadow-[0_30px_80px_-30px_hsl(var(--primary)/0.35)] ${
+              format === "vertical" ? "mx-auto max-w-[280px]" : ""
+            }`}
+          >
             <video
+              key={format}
               ref={videoRef}
-              className="block aspect-video w-full"
-              poster={heroPoster}
+              className={`block w-full ${format === "vertical" ? "aspect-[9/16]" : "aspect-video"}`}
+              poster={video.poster}
               autoPlay
               muted
               loop
@@ -90,8 +121,8 @@ export default function HeroSection() {
               preload="auto"
               aria-label="Sacha Tech: attention isn't enough, you need systems. AI agents, WhatsApp CRMs, automations and custom software, for every growing business."
             >
-              <source src={heroVideo} type="video/mp4" />
-              <source src={heroVideoWebm} type="video/webm" />
+              <source src={video.mp4} type="video/mp4" />
+              <source src={video.webm} type="video/webm" />
             </video>
           </div>
         </div>
