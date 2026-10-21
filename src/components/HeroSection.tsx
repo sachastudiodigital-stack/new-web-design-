@@ -1,70 +1,58 @@
-import React, { Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import Eyebrow from "@/components/Eyebrow";
+import { WHATSAPP_URL } from "@/lib/contact";
 
-const Spline = React.lazy(() => import("@splinetool/react-spline"));
+const fadeUp = (delay: number) => ({
+  className: "opacity-0 animate-fade-up",
+  style: { animationDelay: `${delay}s` },
+});
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-end bg-hero-bg overflow-hidden">
-      {/* Spline 3D background */}
-      <div className="absolute inset-0">
-        <Suspense fallback={<div className="absolute inset-0 bg-hero-bg" />}>
-          <Spline
-            scene="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode"
-            className="w-full h-full"
-          />
-        </Suspense>
-      </div>
+    <section id="top" className="dot-grid relative flex min-h-[100svh] items-center overflow-hidden pt-24">
+      {/* The blue slice, sweeping in from the right like the carousel cover */}
+      <div
+        className="slice animate-slice-in absolute right-0 top-[84px] h-10 w-[45%] bg-primary [--slice-cut:8%] md:top-[18%] md:h-20"
+        style={{ animationDelay: "0.1s" }}
+        aria-hidden
+      />
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/30 z-[1] pointer-events-none" />
-
-      {/* Content */}
-      <div className="relative z-10 pointer-events-none w-full max-w-[90%] sm:max-w-md lg:max-w-2xl px-6 md:px-10 pb-10 md:pb-10 pt-32">
-        {/* Heading */}
-        <h1
-          className="text-[clamp(3rem,8vw,6rem)] font-bold leading-[1.05] tracking-[-0.05em] text-foreground mb-2 md:mb-4 uppercase opacity-0 animate-fade-up"
-          style={{ animationDelay: "0.2s" }}
-        >
-          SACHA<span className="text-primary"> AI</span>
-        </h1>
-
-        {/* Subheading */}
-        <p
-          className="text-foreground/80 text-[clamp(1.125rem,2.5vw,1.875rem)] font-light mb-3 md:mb-6 opacity-0 animate-fade-up"
-          style={{ animationDelay: "0.4s" }}
-        >
-          We automate what drives results.
-        </p>
-
-        {/* Description */}
-        <p
-          className="text-muted-foreground text-[clamp(0.875rem,1.5vw,1.25rem)] font-light mb-4 md:mb-8 opacity-0 animate-fade-up"
-          style={{ animationDelay: "0.55s" }}
-        >
-          Performance marketing systems built in days. AI-powered automation
-          deployed across your entire funnel. Data-driven campaigns optimized
-          for maximum ROI. All of it done right, not just fast.
-        </p>
-
-        {/* CTA buttons */}
-        <div
-          className="flex flex-wrap gap-3 font-bold opacity-0 animate-fade-up"
-          style={{ animationDelay: "0.7s" }}
-        >
-          <button className="pointer-events-auto bg-primary text-primary-foreground px-6 py-3 md:px-8 md:py-4 text-sm rounded-sm cursor-pointer hover:brightness-110 transition-all active:scale-[0.97]">
-            Book a Call
-          </button>
-          <button className="pointer-events-auto bg-white text-background px-6 py-3 md:px-8 md:py-4 text-sm rounded-sm cursor-pointer hover:brightness-90 transition-all active:scale-[0.97]">
-            Our Work
-          </button>
+      <div className="relative mx-auto w-full max-w-7xl px-6 pb-16 md:px-10">
+        <div {...fadeUp(0.2)}>
+          <Eyebrow>A new chapter · Sacha is now Sacha Tech</Eyebrow>
         </div>
 
-        {/* Trust line */}
-        <p
-          className="text-muted-foreground/60 text-xs font-light mt-4 md:mt-6 opacity-0 animate-fade-up"
-          style={{ animationDelay: "0.85s" }}
+        <h1
+          className={`display mt-8 max-w-5xl text-[clamp(2rem,6vw,4.75rem)] ${fadeUp(0.35).className}`}
+          style={fadeUp(0.35).style}
         >
-          Trusted growth partner. Results-driven. 40+ campaigns scaled.
+          AI-powered systems for every growing business.
+        </h1>
+
+        <p
+          className={`mt-8 max-w-2xl text-[clamp(1rem,1.6vw,1.25rem)] font-light leading-relaxed text-muted-foreground ${fadeUp(0.5).className}`}
+          style={fadeUp(0.5).style}
+        >
+          AI agents, WhatsApp CRMs, automations and custom software:{" "}
+          <span className="text-foreground">the tools that turn attention into revenue.</span>
+        </p>
+
+        <div className={`mt-10 flex flex-wrap gap-3 ${fadeUp(0.65).className}`} style={fadeUp(0.65).style}>
+          <Button asChild size="lg" className="h-12 px-8 font-semibold">
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+              Start on WhatsApp
+            </a>
+          </Button>
+          <Button asChild variant="heroOutline" size="lg" className="h-12 px-8 font-semibold">
+            <a href="#services">See what we build</a>
+          </Button>
+        </div>
+
+        <p
+          className={`mt-10 text-xs uppercase tracking-[0.25em] text-muted-foreground/70 ${fadeUp(0.8).className}`}
+          style={fadeUp(0.8).style}
+        >
+          Founder-led · Honest pricing · From Warangal to Geelong
         </p>
       </div>
     </section>
